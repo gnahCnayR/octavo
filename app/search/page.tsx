@@ -2,10 +2,10 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { Brain, ArrowLeft, Sparkles, Clock, ExternalLink } from "lucide-react"
+import { Sparkles, Clock, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import Link from "next/link"
+import { Header } from "@/components/header"
 import { MemoryExplorerModal } from "@/components/memory-explorer-modal"
 
 const mockSearchResults = {
@@ -74,38 +74,27 @@ function SearchResultsContent() {
     )
   }
 
+  // Search metadata for the header
+  const searchMetadata = (
+    <div className="text-sm text-muted-foreground">
+      <span className="text-orange-500">{mockSearchResults.processingTime}</span> •{" "}
+      {mockSearchResults.totalMemories} memories
+    </div>
+  )
+
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border/50 backdrop-blur-sm sticky top-0 z-40 bg-background/80">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-                <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-                <div className="w-8 h-8 bg-orange-500 rounded-md flex items-center justify-center">
-                  <Brain className="w-5 h-5 text-background" />
-                </div>
-                <span className="text-xl font-bold text-foreground">octopus</span>
-              </Link>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <span className="text-orange-500">{mockSearchResults.processingTime}</span> •{" "}
-              {mockSearchResults.totalMemories} memories
-            </div>
-          </div>
-        </div>
-      </header>
+      <Header showBackButton={true} showNavigation={false} rightContent={searchMetadata} />
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         {/* Query Display */}
         <div className="mb-8">
-          <h1 className="text-2xl font-bold text-foreground mb-2">"{query}"</h1>
+          <h1 className="text-2xl font-semibold text-foreground mb-2">"{query}"</h1>
           <p className="text-muted-foreground">searched through {mockSearchResults.totalMemories} shared memories</p>
         </div>
 
         {/* AI Answer */}
-        <div className="bg-card border border-border rounded-lg p-6 mb-8">
+        <div className="bg-card border border-border rounded-xl p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
               <Sparkles className="w-5 h-5 text-orange-500" />
@@ -123,7 +112,7 @@ function SearchResultsContent() {
         </div>
 
         {/* Key Insights */}
-        <div className="bg-card border border-border rounded-lg p-6 mb-8">
+        <div className="bg-card border border-border rounded-xl p-6 mb-8">
           <h3 className="font-semibold text-foreground mb-4 flex items-center space-x-2">
             <Clock className="w-5 h-5 text-orange-500" />
             <span>key insights</span>
@@ -144,7 +133,7 @@ function SearchResultsContent() {
           {mockSearchResults.memoryBlocks.map((memory) => (
             <div
               key={memory.id}
-              className="bg-card border border-border rounded-lg p-6 hover:border-orange-500/50 transition-all cursor-pointer"
+              className="bg-card border border-border rounded-xl p-6 hover:border-orange-500/50 transition-all cursor-pointer"
             >
               <div className="flex items-start justify-between mb-3">
                 <h4 className="font-semibold text-foreground flex-1">{memory.title}</h4>

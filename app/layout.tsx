@@ -2,9 +2,14 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
-  generator: 'v0.dev',
+  title: 'Octavo - Collective Memory Engine',
+  description: 'Search with memory. Discover what actually worked through collective intelligence powered by Letta agents.',
+  keywords: ['memory search', 'collective intelligence', 'letta agents', 'knowledge discovery'],
+  authors: [{ name: 'Octavo Team' }],
+  icons: {
+    icon: '/favicon.ico',
+  },
+  robots: 'index, follow',
 }
 
 export default function RootLayout({
