@@ -29,7 +29,7 @@ export function DiscoveryCard({
     >
       <div className="aspect-[4/3] bg-muted relative overflow-hidden">
         <img
-          src={image || "/placeholder.svg"}
+          src={image || "/placeholder.jpg"}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />

@@ -3,17 +3,43 @@
 import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
 
 interface SearchFormProps {
   placeholder?: string
   className?: string
 }
 
-export function SearchForm({ placeholder = "Ask anything...", className = "" }: SearchFormProps) {
+const sampleQueries = [
+  "How do I optimize React performance?",
+  "What are the best practices for system design interviews?",
+  "How to transition into machine learning career?",
+  "What's the most effective way to raise startup funding?",
+  "How do successful remote teams stay productive?",
+  "What are proven cryptocurrency trading strategies?",
+  "How to scale a web application to millions of users?",
+  "What are the key principles of effective leadership?",
+]
+
+export function SearchForm({ placeholder, className = "" }: SearchFormProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
+  const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
+
+  // Rotate placeholder text every 3 seconds
+  useEffect(() => {
+    if (placeholder) return // Don't rotate if custom placeholder is provided
+    
+    const interval = setInterval(() => {
+      setCurrentPlaceholderIndex((prev) => (prev + 1) % sampleQueries.length)
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [placeholder])
+
+  const currentPlaceholder = placeholder || sampleQueries[currentPlaceholderIndex]
 
   const handleSearch = async () => {
     if (!searchQuery.trim()) return
@@ -57,9 +83,31 @@ export function SearchForm({ placeholder = "Ask anything...", className = "" }: 
       <form onSubmit={handleSubmit}>
         <div className="relative group">
           <Search className="absolute left-4 top-4 text-muted-foreground w-5 h-5 group-focus-within:text-orange-500 transition-colors duration-200" />
+          
+          {/* Animated placeholder overlay */}
+          {!searchQuery && (
+            <div className="absolute left-12 top-4 text-base pointer-events-none overflow-hidden h-6">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentPlaceholder}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ 
+                    duration: 1.5,
+                    ease: "easeInOut"
+                  }}
+                  className="text-muted-foreground"
+                >
+                  {currentPlaceholder}
+                </motion.div>
+              </AnimatePresence>
+            </div>
+          )}
+          
           <textarea
             ref={textareaRef}
-            placeholder={placeholder}
+            placeholder="" // We handle placeholder with overlay
             value={searchQuery}
             onChange={handleChange}
             onKeyDown={handleKeyDown}

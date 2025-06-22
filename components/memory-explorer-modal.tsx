@@ -142,7 +142,7 @@ export function MemoryExplorerModal({ isOpen, onClose, query }: MemoryExplorerMo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden flex flex-col bg-card border-border">
+      <DialogContent className="max-w-6xl h-[90vh] flex flex-col bg-card border-border">
         <DialogHeader className="flex-shrink-0 border-b border-border pb-4">
           <DialogTitle className="flex items-center space-x-3">
             <Brain className="w-5 h-5 text-orange-500" />
@@ -153,9 +153,9 @@ export function MemoryExplorerModal({ isOpen, onClose, query }: MemoryExplorerMo
           </DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 min-h-0">
           <Tabs defaultValue="reasoning" className="h-full flex flex-col">
-            <TabsList className="grid w-full grid-cols-2 flex-shrink-0 bg-muted">
+            <TabsList className="grid w-full grid-cols-2 flex-shrink-0 bg-muted mb-4">
               <TabsTrigger
                 value="reasoning"
                 className="data-[state=active]:bg-orange-500 data-[state=active]:text-background"
@@ -170,8 +170,8 @@ export function MemoryExplorerModal({ isOpen, onClose, query }: MemoryExplorerMo
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="reasoning" className="flex-1 overflow-auto mt-4">
-              <div className="space-y-4">
+            <TabsContent value="reasoning" className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <div className="space-y-4 pb-4">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-foreground">chain_of_thought</h3>
                   <Badge variant="outline">{mockLettaReasoning.steps.length} steps</Badge>
@@ -220,8 +220,8 @@ export function MemoryExplorerModal({ isOpen, onClose, query }: MemoryExplorerMo
               </div>
             </TabsContent>
 
-            <TabsContent value="memories" className="flex-1 overflow-auto mt-4">
-              <div className="space-y-4">
+            <TabsContent value="memories" className="flex-1 min-h-0 overflow-y-auto pr-2">
+              <div className="space-y-4 pb-4">
                 <div className="flex items-center justify-between mb-6">
                   <h3 className="text-lg font-semibold text-foreground">source_memories</h3>
                   <div className="flex items-center space-x-2">
@@ -264,7 +264,7 @@ export function MemoryExplorerModal({ isOpen, onClose, query }: MemoryExplorerMo
                       {viewMode === "summarized" ? (
                         <p className="text-muted-foreground leading-relaxed">{memory.summarizedContent}</p>
                       ) : (
-                        <pre className="whitespace-pre-wrap font-mono text-xs bg-background/50 p-4 rounded border border-border overflow-auto text-foreground">
+                        <pre className="whitespace-pre-wrap font-mono text-xs bg-background/50 p-4 rounded border border-border overflow-auto max-h-96 text-foreground">
                           {memory.rawContent}
                         </pre>
                       )}

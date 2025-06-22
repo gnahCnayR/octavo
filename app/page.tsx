@@ -17,7 +17,7 @@ const discoveryBlocks = [
     description: "Memory insights from 127 developers on React optimization techniques",
     memories: 127,
     category: "Development",
-    image: "/placeholder.svg?height=200&width=300",
+    image: "/placeholder.jpg?height=200&width=300",
     confidence: 0.94,
   },
   {
@@ -26,7 +26,7 @@ const discoveryBlocks = [
     description: "Shared experiences from 89 professionals who switched to ML",
     memories: 89,
     category: "Career",
-    image: "/placeholder.svg?height=250&width=300",
+    image: "/placeholder.jpg?height=250&width=300",
     confidence: 0.91,
   },
   {
@@ -35,7 +35,7 @@ const discoveryBlocks = [
     description: "Collective wisdom from 156 founders on raising capital",
     memories: 156,
     category: "Business",
-    image: "/placeholder.svg?height=180&width=300",
+    image: "/placeholder.jpg?height=180&width=300",
     confidence: 0.88,
   },
   {
@@ -44,7 +44,7 @@ const discoveryBlocks = [
     description: "Best practices from 203 remote workers worldwide",
     memories: 203,
     category: "Productivity",
-    image: "/placeholder.svg?height=220&width=300",
+    image: "/placeholder.jpg?height=220&width=300",
     confidence: 0.92,
   },
   {
@@ -53,7 +53,7 @@ const discoveryBlocks = [
     description: "Success patterns from 78 engineers at top tech companies",
     memories: 78,
     category: "Interview",
-    image: "/placeholder.svg?height=190&width=300",
+    image: "/placeholder.jpg?height=190&width=300",
     confidence: 0.89,
   },
   {
@@ -62,7 +62,7 @@ const discoveryBlocks = [
     description: "Risk management insights from 134 experienced traders",
     memories: 134,
     category: "Finance",
-    image: "/placeholder.svg?height=240&width=300",
+    image: "/placeholder.jpg?height=240&width=300",
     confidence: 0.85,
   },
 ]
@@ -77,10 +77,10 @@ export default function HomePage() {
         {/* Search Section */}
         <div className="pt-16 pb-12 text-center">
           <h1 className="text-4xl font-semibold text-foreground mb-3 tracking-tight">
-            Search with <span className="text-orange-500">Memory</span>
+            Search the <span className="text-orange-500">Collective Mind</span>
           </h1>
           <p className="text-lg text-muted-foreground mb-8 max-w-md mx-auto">
-            Discover what actually worked through collective intelligence
+            Real wisdom from real people who've been there
           </p>
 
           {/* Search Form */}

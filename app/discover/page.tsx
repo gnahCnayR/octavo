@@ -21,7 +21,7 @@ const featuredContent = {
   description: "Comprehensive insights from 400+ developers who successfully deployed AI applications in production, covering everything from model selection to scaling challenges.",
   memories: 412,
   category: "Technology",
-  image: "/placeholder.svg?height=400&width=800",
+  image: "/placeholder.jpg?height=400&width=800",
   confidence: 0.97,
   author: "Collective Intelligence",
   readTime: "8 min read",
@@ -35,7 +35,7 @@ const discoverContent = [
     description: "Latest trends and strategies from 150+ successful funding rounds",
     memories: 156,
     category: "Business",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.jpg?height=300&width=400",
     confidence: 0.94,
   },
   {
@@ -44,7 +44,7 @@ const discoverContent = [
     description: "Best practices from 200+ remote team leaders worldwide",
     memories: 203,
     category: "Productivity",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.jpg?height=300&width=400",
     confidence: 0.91,
   },
   {
@@ -53,7 +53,7 @@ const discoverContent = [
     description: "Success stories from 89 professionals who made the switch",
     memories: 89,
     category: "Career",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.jpg?height=300&width=400",
     confidence: 0.89,
   },
   {
@@ -62,7 +62,7 @@ const discoverContent = [
     description: "Risk management insights from 134 experienced traders",
     memories: 134,
     category: "Finance",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.jpg?height=300&width=400",
     confidence: 0.87,
   },
   {
@@ -71,7 +71,7 @@ const discoverContent = [
     description: "Success patterns from 78 engineers at top tech companies",
     memories: 78,
     category: "Technology",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.jpg?height=300&width=400",
     confidence: 0.93,
   },
   {
@@ -80,7 +80,7 @@ const discoverContent = [
     description: "Proven research approaches from 120+ published scientists",
     memories: 125,
     category: "Science",
-    image: "/placeholder.svg?height=300&width=400",
+    image: "/placeholder.jpg?height=300&width=400",
     confidence: 0.88,
   },
 ]
