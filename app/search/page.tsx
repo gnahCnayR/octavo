@@ -2,10 +2,10 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import { Sparkles, Clock, ExternalLink } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Header } from "@/components/header"
+import { SynthesisCard } from "@/components/synthesis-card"
+import { InsightsCard } from "@/components/insights-card"
+import { MemoryBlock } from "@/components/memory-block"
 import { MemoryExplorerModal } from "@/components/memory-explorer-modal"
 
 const mockSearchResults = {
@@ -94,74 +94,25 @@ function SearchResultsContent() {
         </div>
 
         {/* AI Answer */}
-        <div className="bg-card border border-border rounded-xl p-6 mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center space-x-2">
-              <Sparkles className="w-5 h-5 text-orange-500" />
-              <span className="font-semibold text-foreground">synthesis</span>
-            </div>
-            <Badge variant="secondary" className="bg-orange-500/10 text-orange-500 border-orange-500/20">
-              {mockSearchResults.totalMemories} memories
-            </Badge>
-          </div>
-          <p className="text-foreground leading-relaxed mb-6 text-lg">{mockSearchResults.answer}</p>
-          <Button onClick={() => setIsModalOpen(true)} className="bg-orange-500 hover:bg-orange-600 text-background">
-            <ExternalLink className="w-4 h-4 mr-2" />
-            explore reasoning
-          </Button>
-        </div>
+        <SynthesisCard
+          answer={mockSearchResults.answer}
+          totalMemories={mockSearchResults.totalMemories}
+          onExploreReasoning={() => setIsModalOpen(true)}
+          className="mb-8"
+        />
 
         {/* Key Insights */}
-        <div className="bg-card border border-border rounded-xl p-6 mb-8">
-          <h3 className="font-semibold text-foreground mb-4 flex items-center space-x-2">
-            <Clock className="w-5 h-5 text-orange-500" />
-            <span>key insights</span>
-          </h3>
-          <ul className="space-y-3">
-            {mockSearchResults.insights.map((insight, index) => (
-              <li key={index} className="flex items-start space-x-3">
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mt-2.5 flex-shrink-0" />
-                <span className="text-muted-foreground leading-relaxed">{insight}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <InsightsCard insights={mockSearchResults.insights} className="mb-8" />
 
         {/* Memory Blocks */}
         <div className="space-y-4">
           <h3 className="font-semibold text-foreground mb-4">source memories</h3>
           {mockSearchResults.memoryBlocks.map((memory) => (
-            <div
+            <MemoryBlock
               key={memory.id}
-              className="bg-card border border-border rounded-xl p-6 hover:border-orange-500/50 transition-all cursor-pointer"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <h4 className="font-semibold text-foreground flex-1">{memory.title}</h4>
-                <div className="flex items-center space-x-2 ml-4">
-                  <Badge variant="outline" className="text-xs">
-                    {memory.category}
-                  </Badge>
-                  <Badge variant="outline" className="text-xs">
-                    {memory.year}
-                  </Badge>
-                </div>
-              </div>
-              <p className="text-muted-foreground mb-3 leading-relaxed">{memory.summary}</p>
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">by {memory.source}</span>
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-muted-foreground">
-                    {Math.round(memory.confidence * 100)}% confidence
-                  </span>
-                  <div className="w-12 h-1.5 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-orange-500 rounded-full"
-                      style={{ width: `${memory.confidence * 100}%` }}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+              {...memory}
+              onClick={() => console.log(`Clicked memory block: ${memory.title}`)}
+            />
           ))}
         </div>
       </main>

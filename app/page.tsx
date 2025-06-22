@@ -2,12 +2,11 @@
 
 import type React from "react"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { Search, Sparkles, Code, Database, Cpu } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import { Header } from "@/components/header"
+import { SearchForm } from "@/components/search-form"
+import { StatsBar } from "@/components/stats-bar"
+import { DiscoveryCard } from "@/components/discovery-card"
 
 // Mock discovery data
 const discoveryBlocks = [
@@ -68,22 +67,8 @@ const discoveryBlocks = [
 ]
 
 export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isSearching, setIsSearching] = useState(false)
-  const router = useRouter()
-
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!searchQuery.trim()) return
-
-    setIsSearching(true)
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
-  }
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
       <Header />
 
       {/* Main Content */}
@@ -98,47 +83,10 @@ export default function HomePage() {
           </p>
 
           {/* Search Form */}
-          <div className="max-w-2xl mx-auto mb-8">
-            <form onSubmit={handleSearch}>
-              <div className="relative group">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-orange-500 transition-colors" />
-                <Input
-                  type="text"
-                  placeholder="Ask anything..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 pr-28 py-4 text-base bg-background border-2 border-border focus:border-orange-500 focus:ring-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
-                  disabled={isSearching}
-                />
-                <Button
-                  type="submit"
-                  disabled={!searchQuery.trim() || isSearching}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-background rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50"
-                >
-                  {isSearching ? (
-                    <div className="flex items-center space-x-2">
-                      <div className="w-3 h-2 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                      <span>searching...</span>
-                    </div>
-                  ) : (
-                    <span>Search</span>
-                  )}
-                </Button>
-              </div>
-            </form>
-          </div>
+          <SearchForm className="mb-8" />
 
           {/* Stats */}
-          <div className="flex items-center justify-center space-x-8 text-sm text-muted-foreground">
-            <div className="flex items-center space-x-2">
-              <Database className="w-4 h-4" />
-              <span>2.4k memories</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <Cpu className="w-4 h-4" />
-              <span>847 agents</span>
-            </div>
-          </div>
+          <StatsBar />
         </div>
 
         {/* Discovery Section */}
@@ -153,38 +101,11 @@ export default function HomePage() {
           {/* Clean Grid Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {discoveryBlocks.map((block) => (
-              <div
+              <DiscoveryCard
                 key={block.id}
-                className="group bg-card border border-border rounded-xl overflow-hidden hover:shadow-lg hover:border-orange-500/30 transition-all duration-200 cursor-pointer"
-              >
-                <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                  <img
-                    src={block.image || "/placeholder.svg"}
-                    alt={block.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-3 right-3">
-                    <div className="bg-background/90 backdrop-blur-sm rounded-full px-3 py-1 text-xs font-medium text-foreground">
-                      {block.memories}
-                    </div>
-                  </div>
-                </div>
-                <div className="p-5">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-xs text-orange-500 font-medium uppercase tracking-wide">
-                      {block.category}
-                    </span>
-                    <div className="flex items-center space-x-1">
-                      <Sparkles className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-xs text-muted-foreground">{Math.round(block.confidence * 100)}%</span>
-                    </div>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-orange-500 transition-colors line-clamp-2">
-                    {block.title}
-                  </h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{block.description}</p>
-                </div>
-              </div>
+                {...block}
+                onClick={() => console.log(`Clicked discovery block: ${block.title}`)}
+              />
             ))}
           </div>
         </div>
@@ -194,7 +115,7 @@ export default function HomePage() {
       <footer className="border-t border-border/40 bg-muted/20">
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="text-center text-sm text-muted-foreground">
-            <p>Powered by Letta agent memory • Octavo v0.1</p>
+            <p>Made with ❤️ by DG, SY, and RC </p>
           </div>
         </div>
       </footer>
