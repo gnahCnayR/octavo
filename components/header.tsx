@@ -41,6 +41,9 @@ export function Header({ showBackButton = false, showNavigation = true, rightCon
                 <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Memories
                 </Link>
+                <Link href="/chat" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Chat
+                </Link>
                 <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   About
                 </Link>
