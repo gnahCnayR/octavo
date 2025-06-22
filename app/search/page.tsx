@@ -339,6 +339,7 @@ function getFirstParagraph(text: string): string {
 function SearchResultsContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get("q") || ""
+  const result = searchParams.get("result") || ""
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
   const [searchResults, setSearchResults] = useState<any>(null)
@@ -376,30 +377,16 @@ function SearchResultsContent() {
       })
 
       try {
-        // Call the Letta search API to get real response
-        const response = await fetch('/api/search', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ query }),
-        });
-
-        if (response.ok) {
-          const data = await response.text()
-          console.log('Raw Letta response:', data);
-          
-          // Parse the streaming response
-          const parsedAnswer = parseStreamingResponse(data);
-          console.log('Parsed answer:', parsedAnswer);
-          
-          // Update with real Letta data
+        if(result) {
+          const decodedResult = decodeURIComponent(result);
+          const onceParsed = JSON.parse(decodedResult);
+          const parsedResponse = typeof onceParsed === "string" ? JSON.parse(onceParsed) : onceParsed;
           setSearchResults({
             query,
             totalMemories: 7, // Placeholder - would come from Letta
             processingTime: "0.11s", // Placeholder - would be calculated
-            answer: parsedAnswer || "No response available",
-            insights: [
+            answer: parsedResponse.synthesis || "No response available",
+            insights: parsedResponse.insights || [
               "Real insights from Letta agent memory",
               "Personalized recommendations based on your query",
               "Context-aware suggestions from collective experience",
@@ -417,8 +404,51 @@ function SearchResultsContent() {
             ],
           })
         } else {
-          throw new Error('Search API failed')
+          // Call the Letta search API to get real response
+          const response = await fetch('/api/search', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ query }),
+          });
+  
+          if (response.ok) {
+            const data = await response.text()
+            console.log('Raw Letta response:', data);
+            
+            // Parse the streaming response
+            const parsedAnswer = parseStreamingResponse(data);
+            console.log('Parsed answer:', parsedAnswer);
+            
+            // Update with real Letta data
+            setSearchResults({
+              query,
+              totalMemories: 7, // Placeholder - would come from Letta
+              processingTime: "0.11s", // Placeholder - would be calculated
+              answer: parsedAnswer || "No response available",
+              insights: [
+                "Real insights from Letta agent memory",
+                "Personalized recommendations based on your query",
+                "Context-aware suggestions from collective experience",
+              ],
+              memoryBlocks: [
+                {
+                  id: 1,
+                  title: "Letta Agent Memory",
+                  source: "AI Agent",
+                  year: 2024,
+                  confidence: 0.96,
+                  summary: "Real memory from your Letta agent",
+                  category: "AI Generated",
+                },
+              ],
+            })
+          } else {
+            throw new Error('Search API failed')
+          }
         }
+
       } catch (error) {
         console.error('Error fetching Letta results:', error)
         setUseFallback(true)
@@ -432,7 +462,7 @@ function SearchResultsContent() {
     }
 
     fetchResults()
-  }, [query])
+  }, [query, result])
 
   useEffect(() => {
     // Total processing time: sum of all step durations

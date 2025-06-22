@@ -20,9 +20,6 @@ export async function POST(req: Request) {
             throw new Error('No user message found');
         }
 
-        console.log('Starting stream with Letta agent:', agentId);
-        console.log('User message:', lastMessage.content);
-
         // Use the correct Letta API pattern for streaming
         const result = streamText({
             model: lettaCloud(agentId),

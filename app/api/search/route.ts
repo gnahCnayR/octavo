@@ -15,11 +15,7 @@ export async function POST(req: Request) {
 
         // Use the specific agent you created - "daniel-default-agent"
         const agentId = "agent-e32c23f9-0123-4efc-b322-1c04970f18a8";
-        console.log('Using agent:', agentId);
-
-        console.log('Starting stream with Letta agent:', agentId);
-        console.log('User query:', query);
-
+        
         // Use the correct Letta API pattern for streaming
         const result = streamText({
             model: lettaCloud(agentId),
