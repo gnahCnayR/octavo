@@ -13,10 +13,10 @@ import { MemoryExplorerModal } from "@/components/memory-explorer-modal"
 
 const mockSearchResults = {
   query: "React performance optimization",
-  totalMemories: 127,
-  processingTime: "0.34s",
+  totalMemories: 7,
+  processingTime: "0.11s",
   answer:
-    "Based on 127 shared memories, React performance optimization follows three critical patterns: memoization strategies (React.memo, useMemo, useCallback), virtual DOM optimization through proper key usage, and state management efficiency. The most successful developers implement performance monitoring first, then optimize based on actual bottlenecks rather than premature optimization.",
+    "Based on 7 shared memories, React performance optimization follows three critical patterns: memoization strategies (React.memo, useMemo, useCallback), virtual DOM optimization through proper key usage, and state management efficiency. The most successful developers implement performance monitoring first, then optimize based on actual bottlenecks rather than premature optimization.",
   insights: [
     "React.memo prevents unnecessary re-renders in 89% of optimization cases",
     "useCallback and useMemo reduce computation overhead by average 67%",
@@ -60,25 +60,25 @@ const processingSteps = [
     id: 1,
     title: "Letta: analyzing query intent",
     subtitle: "Understanding what you're looking for",
-    duration: 1000,
+    duration: 3000,
   },
   {
     id: 2,
     title: "Memory retrieval across domains",
     subtitle: "Searching through collective knowledge",
-    duration: 1200,
+    duration: 3500,
   },
   {
     id: 3,
     title: "Orkes: orchestrating workflows",
     subtitle: "Coordinating parallel processing",
-    duration: 800,
+    duration: 2500,
   },
   {
     id: 4,
     title: "Groq: generating synthesis",
     subtitle: "Creating your personalized response",
-    duration: 600,
+    duration: 2000,
   },
 ]
 
@@ -246,7 +246,7 @@ function ProcessingVisualization({ query }: { query: string }) {
           className="text-center mt-16"
         >
           <p className="text-slate-500 text-xs">
-            Powered by Letta • Orkes • Groq
+            Powered by Letta • Orkes • Groq • Claude
           </p>
         </motion.div>
       </div>
@@ -254,11 +254,185 @@ function ProcessingVisualization({ query }: { query: string }) {
   )
 }
 
+// Function to parse streaming response
+function parseStreamingResponse(text: string): string {
+  console.log('Raw streaming response:', text);
+  
+  // First, try to extract the actual content from the streaming format
+  let cleanText = '';
+  
+  // Look for the actual text content in the streaming response
+  const textMatches = text.match(/0:"([^"]*)"/g);
+  if (textMatches && textMatches.length > 0) {
+    // Extract all text chunks and join them
+    const textChunks = textMatches.map(match => {
+      const content = match.match(/0:"([^"]*)"/);
+      return content ? content[1] : '';
+    });
+    
+    // Join all chunks to get the complete response
+    cleanText = textChunks.join('');
+  } else {
+    // Fallback: try to extract any readable text
+    cleanText = text.replace(/[0-9]+:"([^"]*)"/g, '$1');
+  }
+  
+  console.log('Extracted text before cleaning:', cleanText);
+  
+  // Clean the text thoroughly
+  cleanText = cleanAndFormatText(cleanText);
+  
+  console.log('Final cleaned text:', cleanText);
+  return cleanText;
+}
+
+// Function to clean and format the text
+function cleanAndFormatText(text: string): string {
+  if (!text) return '';
+  
+  // Remove all newline escape sequences and replace with actual newlines
+  let cleaned = text.replace(/\\n/g, '\n');
+  
+  // Remove duplicate content by splitting into lines and keeping only unique ones
+  const lines = cleaned.split('\n');
+  const uniqueLines: string[] = [];
+  const seen = new Set<string>();
+  
+  for (const line of lines) {
+    const trimmed = line.trim();
+    if (trimmed && !seen.has(trimmed)) {
+      seen.add(trimmed);
+      uniqueLines.push(trimmed);
+    }
+  }
+  
+  // Join back together
+  cleaned = uniqueLines.join('\n\n');
+  
+  // Remove any remaining escape sequences
+  cleaned = cleaned
+    .replace(/\\"/g, '"')
+    .replace(/\\t/g, ' ')
+    .replace(/\\r/g, '')
+    .replace(/\s+/g, ' ') // Normalize whitespace
+    .trim();
+  
+  return cleaned;
+}
+
+// Function to get first paragraph (around 50 words)
+function getFirstParagraph(text: string): string {
+  const paragraphs = text.split('\n\n').filter(p => p.trim());
+  if (paragraphs.length === 0) return text;
+  
+  const firstParagraph = paragraphs[0];
+  const words = firstParagraph.split(' ');
+  
+  // If first paragraph is longer than 50 words, truncate it
+  if (words.length > 50) {
+    return words.slice(0, 50).join(' ') + '...';
+  }
+  
+  return firstParagraph;
+}
+
 function SearchResultsContent() {
   const searchParams = useSearchParams()
   const query = searchParams.get("q") || ""
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const [searchResults, setSearchResults] = useState<any>(null)
+  const [useFallback, setUseFallback] = useState(false)
+
+  useEffect(() => {
+    const fetchResults = async () => {
+      if (!query) {
+        setIsLoading(false)
+        return
+      }
+
+      // Set initial loading state with "Loading..." text
+      setSearchResults({
+        query,
+        totalMemories: 7,
+        processingTime: "0.11s",
+        answer: "Loading...",
+        insights: [
+          "Loading insights...",
+          "Loading recommendations...",
+          "Loading suggestions...",
+        ],
+        memoryBlocks: [
+          {
+            id: 1,
+            title: "Loading...",
+            source: "Loading...",
+            year: 2024,
+            confidence: 0.96,
+            summary: "Loading...",
+            category: "Loading...",
+          },
+        ],
+      })
+
+      try {
+        // Call the Letta search API to get real response
+        const response = await fetch('/api/search', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ query }),
+        });
+
+        if (response.ok) {
+          const data = await response.text()
+          console.log('Raw Letta response:', data);
+          
+          // Parse the streaming response
+          const parsedAnswer = parseStreamingResponse(data);
+          console.log('Parsed answer:', parsedAnswer);
+          
+          // Update with real Letta data
+          setSearchResults({
+            query,
+            totalMemories: 7, // Placeholder - would come from Letta
+            processingTime: "0.11s", // Placeholder - would be calculated
+            answer: parsedAnswer || "No response available",
+            insights: [
+              "Real insights from Letta agent memory",
+              "Personalized recommendations based on your query",
+              "Context-aware suggestions from collective experience",
+            ],
+            memoryBlocks: [
+              {
+                id: 1,
+                title: "Letta Agent Memory",
+                source: "AI Agent",
+                year: 2024,
+                confidence: 0.96,
+                summary: "Real memory from your Letta agent",
+                category: "AI Generated",
+              },
+            ],
+          })
+        } else {
+          throw new Error('Search API failed')
+        }
+      } catch (error) {
+        console.error('Error fetching Letta results:', error)
+        setUseFallback(true)
+        setSearchResults({
+          ...mockSearchResults,
+          query: query
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchResults()
+  }, [query])
 
   useEffect(() => {
     // Total processing time: sum of all step durations
@@ -271,11 +445,30 @@ function SearchResultsContent() {
     return <ProcessingVisualization query={query} />
   }
 
+  // Use real results or fallback
+  const results = searchResults || {
+    query,
+    totalMemories: 7,
+    processingTime: "0.11s",
+    answer: "Loading...",
+    insights: ["Loading...", "Loading...", "Loading..."],
+    memoryBlocks: [{
+      id: 1,
+      title: "Loading...",
+      source: "Loading...",
+      year: 2024,
+      confidence: 0.96,
+      summary: "Loading...",
+      category: "Loading...",
+    }],
+  }
+
   // Search metadata for the header
   const searchMetadata = (
     <div className="text-sm text-muted-foreground">
-      <span className="text-orange-500">{mockSearchResults.processingTime}</span> •{" "}
-      {mockSearchResults.totalMemories} memories
+      <span className="text-orange-500">{results.processingTime}</span> •{" "}
+      {results.totalMemories} memories
+      {useFallback && <span className="text-orange-500 ml-2">(Example Data)</span>}
     </div>
   )
 
@@ -287,24 +480,24 @@ function SearchResultsContent() {
         {/* Query Display */}
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-foreground mb-2">"{query}"</h1>
-          <p className="text-muted-foreground">searched through {mockSearchResults.totalMemories} shared memories</p>
+          <p className="text-muted-foreground">searched through {results.totalMemories} shared memories</p>
         </div>
 
         {/* AI Answer */}
         <SynthesisCard
-          answer={mockSearchResults.answer}
-          totalMemories={mockSearchResults.totalMemories}
+          answer={results.answer}
+          totalMemories={results.totalMemories}
           onExploreReasoning={() => setIsModalOpen(true)}
           className="mb-8"
         />
 
         {/* Key Insights */}
-        <InsightsCard insights={mockSearchResults.insights} className="mb-8" />
+        <InsightsCard insights={results.insights} className="mb-8" />
 
         {/* Memory Blocks */}
         <div className="space-y-4">
           <h3 className="font-semibold text-foreground mb-4">source memories</h3>
-          {mockSearchResults.memoryBlocks.map((memory) => (
+          {results.memoryBlocks.map((memory: any) => (
             <MemoryBlock
               key={memory.id}
               {...memory}

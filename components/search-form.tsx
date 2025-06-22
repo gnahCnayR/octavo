@@ -45,8 +45,30 @@ export function SearchForm({ placeholder, className = "" }: SearchFormProps) {
     if (!searchQuery.trim()) return
 
     setIsSearching(true)
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+    
+    try {
+      // Call the Letta search API
+      const response = await fetch('/api/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: searchQuery }),
+      });
+
+      if (response.ok) {
+        // Navigate to results page with the query
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+      } else {
+        console.error('Search API failed');
+        // Still navigate to results page (will show fallback data)
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+      }
+    } catch (error) {
+      console.error('Search error:', error);
+      // Navigate to results page (will show fallback data)
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+    }
   }
 
   const handleSubmit = (e: React.FormEvent) => {

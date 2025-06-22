@@ -25,7 +25,7 @@ const mockLettaReasoning = {
     {
       step: 2,
       title: "memory_retrieval",
-      description: "scanning 127 relevant memories across performance domain",
+      description: "scanning relevant memories across performance domain",
       confidence: 0.94,
       details: "filtered by: react, performance, production, optimization",
     },
@@ -212,7 +212,7 @@ export function MemoryExplorerModal({ isOpen, onClose, query }: MemoryExplorerMo
                     <span className="font-semibold text-orange-500">final_synthesis</span>
                   </div>
                   <p className="text-foreground leading-relaxed">
-                    analysis complete: 127 memories processed, 3 optimization patterns identified, confidence_score:
+                    analysis complete: 7 memories processed, 3 optimization patterns identified, confidence_score:
                     0.94. recommendation prioritizes profiling-first approach with systematic memoization and bundle
                     optimization strategies.
                   </p>
