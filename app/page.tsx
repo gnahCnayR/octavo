@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import { Header } from "@/components/header"
@@ -93,9 +94,11 @@ export default function HomePage() {
         <div className="pb-16">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-semibold text-foreground">Discover</h2>
-            <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">
-              View all
-            </Button>
+            <Link href="/discover">
+              <Button variant="ghost" className="text-muted-foreground hover:text-foreground text-sm">
+                View all
+              </Button>
+            </Link>
           </div>
 
           {/* Clean Grid Layout */}

@@ -35,13 +35,13 @@ export function Header({ showBackButton = false, showNavigation = true, rightCon
             {rightContent}
             {showNavigation && (
               <nav className="hidden md:flex items-center space-x-6">
-                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/discover" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Discover
                 </Link>
                 <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Memories
                 </Link>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   About
                 </Link>
               </nav>

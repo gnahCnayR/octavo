@@ -6,6 +6,7 @@ import { Header } from "@/components/header"
 import { SynthesisCard } from "@/components/synthesis-card"
 import { InsightsCard } from "@/components/insights-card"
 import { MemoryBlock } from "@/components/memory-block"
+import { LoadingSpinner } from "@/components/loading-spinner"
 import { MemoryExplorerModal } from "@/components/memory-explorer-modal"
 
 const mockSearchResults = {
@@ -66,10 +67,7 @@ function SearchResultsContent() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted-foreground">processing memories...</p>
-        </div>
+        <LoadingSpinner text="processing memories..." />
       </div>
     )
   }
@@ -127,7 +125,7 @@ export default function SearchResults() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-background flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
+          <LoadingSpinner />
         </div>
       }
     >
