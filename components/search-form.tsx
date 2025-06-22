@@ -1,10 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 
 interface SearchFormProps {
   placeholder?: string
@@ -14,10 +12,10 @@ interface SearchFormProps {
 export function SearchForm({ placeholder = "Ask anything...", className = "" }: SearchFormProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [isSearching, setIsSearching] = useState(false)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
 
-  const handleSearch = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSearch = async () => {
     if (!searchQuery.trim()) return
 
     setIsSearching(true)
@@ -25,33 +23,55 @@ export function SearchForm({ placeholder = "Ask anything...", className = "" }: 
     router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
   }
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    handleSearch()
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSearch()
+    }
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSearchQuery(e.target.value)
+    
+    // Auto-resize textarea
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`
+    }
+  }
+
+  useEffect(() => {
+    // Reset height when search query is cleared
+    if (!searchQuery && textareaRef.current) {
+      textareaRef.current.style.height = 'auto'
+    }
+  }, [searchQuery])
+
   return (
     <div className={`max-w-2xl mx-auto ${className}`}>
-      <form onSubmit={handleSearch}>
+      <form onSubmit={handleSubmit}>
         <div className="relative group">
-          <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5 group-focus-within:text-orange-500 transition-colors" />
-          <Input
-            type="text"
+          <Search className="absolute left-4 top-4 text-muted-foreground w-5 h-5 group-focus-within:text-orange-500 transition-colors duration-200" />
+          <textarea
+            ref={textareaRef}
             placeholder={placeholder}
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-12 pr-28 py-4 text-base bg-background border-2 border-border focus:border-orange-500 focus:ring-0 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
             disabled={isSearching}
+            rows={1}
+            className="w-full pl-12 pr-12 py-4 text-base bg-background border border-border hover:border-orange-500/50 focus-visible:outline-none focus-visible:border-orange-500 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-xl shadow-sm hover:shadow-md transition-all duration-200 resize-none overflow-hidden min-h-[56px]"
           />
-          <Button
-            type="submit"
-            disabled={!searchQuery.trim() || isSearching}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-background rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50"
-          >
-            {isSearching ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-3 h-2 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                <span>searching...</span>
-              </div>
-            ) : (
-              <span>Search</span>
-            )}
-          </Button>
+          {isSearching && (
+            <div className="absolute right-4 top-4">
+              <div className="w-5 h-5 border-2 border-orange-500/30 border-t-orange-500 rounded-full animate-spin" />
+            </div>
+          )}
         </div>
       </form>
     </div>
