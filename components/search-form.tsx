@@ -48,7 +48,7 @@ export function SearchForm({ placeholder, className = "" }: SearchFormProps) {
     
     try {
       // Call the Letta search API
-      const response = await fetch('/api/search', {
+      const response = await fetch('/api/orkes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,7 +58,8 @@ export function SearchForm({ placeholder, className = "" }: SearchFormProps) {
 
       if (response.ok) {
         // Navigate to results page with the query
-        router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+        const data = await response.json();
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}&result=${encodeURIComponent(JSON.stringify(data.responses.data))}`)
       } else {
         console.error('Search API failed');
         // Still navigate to results page (will show fallback data)
