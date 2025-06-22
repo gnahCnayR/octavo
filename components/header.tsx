@@ -27,7 +27,7 @@ export function Header({ showBackButton = false, showNavigation = true, rightCon
               <div className="w-7 h-7 bg-orange-500 rounded-lg flex items-center justify-center">
                 <img src="/logo.svg" alt="Octavo" className="w-4 h-4" />
               </div>
-              <span className="text-xl font-semibold text-foreground">octavo</span>
+              <span className="text-xl font-semibold text-foreground">Octavo</span>
             </Link>
           </div>
           
@@ -38,9 +38,9 @@ export function Header({ showBackButton = false, showNavigation = true, rightCon
                 <Link href="/discover" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Discover
                 </Link>
-                <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                {/* <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Memories
-                </Link>
+                </Link> */}
                 <Link href="/chat" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
                   Chat
                 </Link>
