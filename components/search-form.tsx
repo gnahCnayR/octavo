@@ -48,23 +48,25 @@ export function SearchForm({ placeholder, className = "" }: SearchFormProps) {
     
     try {
       // Call the Letta search API
-      const response = await fetch('/api/orkes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ query: searchQuery }),
-      });
+      router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+      // const response = await fetch('/api/orkes', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({ query: searchQuery }),
+      // });
 
-      if (response.ok) {
-        // Navigate to results page with the query
-        const data = await response.json();
-        router.push(`/search?q=${encodeURIComponent(searchQuery)}&result=${encodeURIComponent(JSON.stringify(data.responses.data))}`)
-      } else {
-        console.error('Search API failed');
-        // Still navigate to results page (will show fallback data)
-        router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
-      }
+      // if (response.ok) {
+      //   // Navigate to results page with the query
+      //   const data = await response.json();
+      //   router.push(`/search?q=${encodeURIComponent(searchQuery)}&result=${encodeURIComponent(JSON.stringify(data.responses.data))}`)
+      // }
+      //  else {
+      //   console.error('Search API failed');
+      //   // Still navigate to results page (will show fallback data)
+      //   router.push(`/search?q=${encodeURIComponent(searchQuery)}`)
+      // }
     } catch (error) {
       console.error('Search error:', error);
       // Navigate to results page (will show fallback data)
